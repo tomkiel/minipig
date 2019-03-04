@@ -1,0 +1,155 @@
+#!/bin/bash
+
+NAME="MINI PIG"
+WELCOME_MES="Facilitando a conversão de vídeos para o Davinci Resolve"
+SELECT_MES="Selecionar arquivo"
+FILE_EXISTS_MES="Arquivo já existe no diretório!"
+ORIGINAL_CODEC=""*.mp4" "*.flv" "*.mov" "*.mkv""
+TO_DAVINCI_CODEC=".mov"
+WORKDIR="$HOME/MINIPIG"
+PI=14159265359
+
+if [ ! -d "$WORKDIR" ];
+  then
+    mkdir $WORKDIR;
+fi
+
+INITIAL=$(zenity --text-info --title="$NAME - $WELCOME_MES" --filename=/opt/workstation/MiniPig/initialDialog.mp --html --width=450 --height=400)
+
+  if [ $? -eq 1 ]
+    then
+      exit
+  fi
+
+while true;
+  do
+  SELECTED_FILE=$(zenity --file-selection --title="Selecione um arquivo" --file-filter="$ORIGINAL_CODEC")
+
+  FILE_EXTENS="$(file --mime-type -b "$SELECTED_FILE")"
+
+  if [ $FILE_EXTENS = "video/mp4" ];
+    then
+      FFMPEG_PRESET="-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le"
+      file=$SELECTED_FILE;
+      FILENAME=${file%.*}
+      FILENAME=${FILENAME##*/}
+
+      if [ ! -d "$WORKDIR/$FILENAME$TO_DAVINCI_CODEC" ];
+        then
+          ALERT=$(zenity --text-info --title="$NAME - $FILE_EXISTS_MES" --filename=/opt/workstation/MiniPig/fileExistsDialog.mp --html --width=450 --height=400)
+      fi
+
+      if [ $? -eq 1 ]
+        then
+          exit;
+      else
+          N=$(((($PI*10)/100)/$RANDOM));
+          FILENAME="$FILENAME"_"$N";
+      fi
+
+      (ffmpeg -i "$SELECTED_FILE" $FFMPEG_PRESET "$HOME/MINIPIG/$FILENAME$TO_DAVINCI_CODEC";
+      sleep 1
+      echo "Arquivo convertido com sucesso!"; sleep 1
+      ) | zenity --progress \
+      --title="$NAME - Convertendo" \
+      --text="Convertendo arquivo..." \
+      --percentage=0 \
+      --widht=300 --height=400;
+
+  elif [ $FILE_EXTENS = "video/flv" ];
+    then
+      FFMPEG_PRESET="-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le"
+      file=$SELECTED_FILE;
+      FILENAME=${file%.*}
+      FILENAME=${FILENAME##*/}
+
+      if [ ! -d "$WORKDIR/$FILENAME$TO_DAVINCI_CODEC" ];
+        then
+          ALERT=$(zenity --text-info --title="$NAME - $FILE_EXISTS_MES" --filename=/opt/workstation/MiniPig/fileExistsDialog.mp --html --width=450 --height=400)
+      fi
+
+      if [ $? -eq 1 ]
+        then
+          exit;
+      else
+          N=$(((($PI*10)/100)/$RANDOM));
+          FILENAME="$FILENAME"_"$N";
+      fi
+
+      (ffmpeg -i "$SELECTED_FILE" $FFMPEG_PRESET "$HOME/MINIPIG/$FILENAME$TO_DAVINCI_CODEC";
+      sleep 1
+      echo "Arquivo convertido com sucesso!"; sleep 1
+      ) | zenity --progress \
+      --title="$NAME - Convertendo" \
+      --text="Convertendo arquivo..." \
+      --percentage=0 \
+      --widht=300 --height=400;
+
+  elif [ $FILE_EXTENS = "video/mov" ];
+    then
+      FFMPEG_PRESET="-codec:v -q:v 0 -codec:a pcm_s16le"
+      file=$SELECTED_FILE;
+      FILENAME=${file%.*}
+      FILENAME=${FILENAME##*/}
+
+      if [ ! -d "$WORKDIR/$FILENAME$TO_DAVINCI_CODEC" ];
+        then
+          ALERT=$(zenity --text-info --title="$NAME - $FILE_EXISTS_MES" --filename=/opt/workstation/MiniPig/fileExistsDialog.mp --html --width=450 --height=400)
+      fi
+
+      if [ $? -eq 1 ]
+        then
+          exit;
+      else
+          N=$(((($PI*10)/100)/$RANDOM));
+          FILENAME="$FILENAME"_"$N";
+      fi
+
+      (ffmpeg -i "$SELECTED_FILE" $FFMPEG_PRESET "$HOME/MINIPIG/$FILENAME$TO_DAVINCI_CODEC";
+      sleep 1
+      echo "Arquivo convertido com sucesso!"; sleep 1
+      ) | zenity --progress \
+      --title="$NAME - Convertendo" \
+      --text="Convertendo arquivo..." \
+      --percentage=0 \
+      --widht=300 --height=400;
+
+  elif [ $FILE_EXTENS = "video/mkv" ];
+    then
+      FFMPEG_PRESET="-codec:v mpeg4 -q:v 0 -codec:a pcm_s16le"
+      file=$SELECTED_FILE;
+      FILENAME=${file%.*}
+      FILENAME=${FILENAME##*/}
+
+      if [ ! -d "$WORKDIR/$FILENAME$TO_DAVINCI_CODEC" ];
+        then
+          ALERT=$(zenity --text-info --title="$NAME - $FILE_EXISTS_MES" --filename=/opt/workstation/MiniPig/fileExistsDialog.mp --html --width=450 --height=400)
+      fi
+
+      if [ $? -eq 1 ]
+        then
+          exit;
+      else
+          N=$(((($PI*10)/100)/$RANDOM));
+          FILENAME="$FILENAME"_"$N";
+      fi
+
+      (ffmpeg -i "$SELECTED_FILE" $FFMPEG_PRESET "$HOME/MINIPIG/$FILENAME$TO_DAVINCI_CODEC";
+      sleep 1
+      echo "Arquivo convertido com sucesso!"; sleep 1
+      ) | zenity --progress \
+      --title="$NAME - Convertendo" \
+      --text="Convertendo arquivo..." \
+      --percentage=0 \
+      --widht=300 --height=400;
+
+  fi
+
+  CONTINUE=$(zenity --text-info --title="$NAME - $WELCOME_MES" --filename=/opt/workstation/MiniPig/continueDialog.mp --html --width=500 --height=200)
+
+  if [ $? -eq 1 ]
+    then
+      break
+  fi
+
+done
